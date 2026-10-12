@@ -1,0 +1,21 @@
+# S0 probe (c): can the workflow token create a release tag under the v* / candidate-v* ruleset?
+name: Tag probe
+on:
+  workflow_dispatch:
+permissions: {}
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create tags with the workflow token
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          for t in v9.9.9 candidate-v9.9.9 probe-unruled-9.9.9; do
+            echo "== $t"
+            gh api -X POST "repos/$GITHUB_REPOSITORY/git/refs" -f ref="refs/tags/$t" -f sha="$GITHUB_SHA"
+            echo "exit=$?"
+          done
