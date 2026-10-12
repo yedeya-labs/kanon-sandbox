@@ -1,0 +1,9 @@
+# S0 probe: the "adopter" side, pinning the reusable workflow to an exact stable tag.
+# Dispatch-only, so the pin never runs on push.
+name: Caller
+on:
+  workflow_dispatch:
+permissions: {}
+jobs:
+  lane:
+    uses: yedeya-labs/kanon-sandbox/.github/workflows/reusable.yml@v1.0.0

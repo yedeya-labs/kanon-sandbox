@@ -1,0 +1,20 @@
+# S0 probe: the same shape as Kanon's own entry (and the one lane-check requires of adopters).
+# Run 1.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directories:
+      - /
+    schedule:
+      interval: daily
+    cooldown:
+      default-days: 3
+      exclude: ["yedeya-labs/kanon-sandbox*"]
+    commit-message:
+      prefix: ci
+      include: scope
+    groups:
+      kanon:
+        patterns: ["yedeya-labs/kanon-sandbox*"]
+      github-actions:
+        patterns: ["*"]
