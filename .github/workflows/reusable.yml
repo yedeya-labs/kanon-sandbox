@@ -7,4 +7,4 @@ jobs:
   hello:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "reusable at ${{ github.workflow_ref }}"
+      - run: echo "reusable (1.1.0) at ${{ github.workflow_ref }}"
