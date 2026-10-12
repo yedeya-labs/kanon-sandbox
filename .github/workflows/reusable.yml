@@ -1,0 +1,10 @@
+# S0 probe: the "Kanon" side, a reusable workflow adopters pin by tag.
+name: Reusable
+on:
+  workflow_call:
+permissions: {}
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "reusable at ${{ github.workflow_ref }}"

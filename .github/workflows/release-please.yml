@@ -1,0 +1,14 @@
+# S0 probe: Kanon's own reusable release workflow, exactly as Kanon's caller calls it,
+# pinned to Kanon's current release. No Releaser secrets: the workflow token.
+name: Release
+on:
+  push:
+    branches: [main]
+permissions: {}
+jobs:
+  release:
+    name: Release
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: yedeya-labs/kanon/.github/workflows/release.yml@v0.39.0
