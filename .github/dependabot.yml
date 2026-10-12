@@ -1,5 +1,6 @@
 # S0 probe: the same shape as Kanon's own entry (and the one lane-check requires of adopters).
 # Run 2: the caller now pins v0.2.0, so a run that reads tags must propose something.
+# Run 3: v1.1.0 now tagged on candidate-v1.1.0's commit.
 version: 2
 updates:
   - package-ecosystem: github-actions
