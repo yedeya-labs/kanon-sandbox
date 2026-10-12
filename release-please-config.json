@@ -6,16 +6,31 @@
       "package-name": "kanon-sandbox",
       "changelog-path": "CHANGELOG.md",
       "initial-version": "0.1.0",
-      "include-component-in-tag": false,
+      "include-component-in-tag": true,
       "include-v-in-tag": true,
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": false,
       "changelog-sections": [
-        { "type": "feat", "section": "Features" },
-        { "type": "fix", "section": "Bug Fixes" },
-        { "type": "ci", "section": "CI" },
-        { "type": "chore", "section": "Chores" }
-      ]
+        {
+          "type": "feat",
+          "section": "Features"
+        },
+        {
+          "type": "fix",
+          "section": "Bug Fixes"
+        },
+        {
+          "type": "ci",
+          "section": "CI"
+        },
+        {
+          "type": "chore",
+          "section": "Chores"
+        }
+      ],
+      "component": "candidate",
+      "tag-separator": "-",
+      "prerelease": true
     }
   }
 }
