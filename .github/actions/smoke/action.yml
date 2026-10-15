@@ -15,16 +15,16 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Smoke, failing when the repository variable D12_SMOKE_FAIL is true
+    - name: Smoke, failing on a run's first attempt only, so a re-run of failed jobs passes
       shell: bash
       env:
-        SMOKE_FAIL: ${{ vars.D12_SMOKE_FAIL }}
+        ATTEMPT: ${{ github.run_attempt }}
         RELEASE: ${{ inputs.release }}
         ENVIRONMENT: ${{ inputs.environment }}
       run: |
         set -euo pipefail
-        if [ "$SMOKE_FAIL" = "true" ]; then
-          echo "::error::D12_SMOKE_FAIL is true: the smoke check fails for $ENVIRONMENT at $RELEASE"
+        if [ "$ATTEMPT" = "1" ]; then
+          echo "::error::the rehearsal's smoke check fails on attempt 1 for $ENVIRONMENT at $RELEASE"
           exit 1
         fi
         echo "Smoke passed for $ENVIRONMENT at $RELEASE"
