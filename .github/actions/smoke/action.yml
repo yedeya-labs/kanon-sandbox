@@ -1,0 +1,30 @@
+# The deploy lane's smoke hook (docs/lanes.md, "The deploy lane"), filled for plan 0010's D12
+# rehearsal with a trivial step and no cloud.
+name: Deploy lane smoke hook
+description: "Checks the deployed system answers as the release expects."
+inputs:
+  environment:
+    description: Passed by Kanon's deploy lane (docs/lanes.md).
+    default: ""
+  release:
+    description: Passed by Kanon's deploy lane (docs/lanes.md).
+    default: ""
+  role:
+    description: Passed by Kanon's deploy lane (docs/lanes.md).
+    default: ""
+runs:
+  using: composite
+  steps:
+    - name: Smoke, failing when the repository variable D12_SMOKE_FAIL is true
+      shell: bash
+      env:
+        SMOKE_FAIL: ${{ vars.D12_SMOKE_FAIL }}
+        RELEASE: ${{ inputs.release }}
+        ENVIRONMENT: ${{ inputs.environment }}
+      run: |
+        set -euo pipefail
+        if [ "$SMOKE_FAIL" = "true" ]; then
+          echo "::error::D12_SMOKE_FAIL is true: the smoke check fails for $ENVIRONMENT at $RELEASE"
+          exit 1
+        fi
+        echo "Smoke passed for $ENVIRONMENT at $RELEASE"

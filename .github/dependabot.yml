@@ -1,6 +1,5 @@
-# S0 probe: the same shape as Kanon's own entry (and the one lane-check requires of adopters).
-# Run 2: the caller now pins v0.2.0, so a run that reads tags must propose something.
-# Run 3: v1.1.0 now tagged on candidate-v1.1.0's commit.
+# The Kanon entry lane-check requires of adopters (K-ADOPT-11). Its pattern also covers the
+# sandbox's own S0 probe caller (yedeya-labs/kanon-sandbox).
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -8,14 +7,14 @@ updates:
       - /
     schedule:
       interval: daily
+    allow:
+      - dependency-name: "yedeya-labs/kanon*"
     cooldown:
       default-days: 3
-      exclude: ["yedeya-labs/kanon-sandbox*"]
+      exclude: ["yedeya-labs/kanon*"]
     commit-message:
       prefix: ci
       include: scope
     groups:
       kanon:
-        patterns: ["yedeya-labs/kanon-sandbox*"]
-      github-actions:
-        patterns: ["*"]
+        patterns: ["yedeya-labs/kanon*"]

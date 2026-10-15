@@ -1,5 +1,7 @@
-# S0 probe: Kanon's own reusable release workflow, exactly as Kanon's caller calls it,
-# pinned to Kanon's current release. No Releaser secrets: the workflow token.
+# Kanon's reusable release workflow, pinned to the release the other callers pin. It maps the
+# Releaser's two secrets by name (docs/release.md): with them stored, a release it publishes
+# starts the deploy lane (plan 0010 §3); without them it runs on the workflow token, whose
+# release starts no run.
 name: Release
 on:
   push:
@@ -11,4 +13,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: yedeya-labs/kanon/.github/workflows/release.yml@v0.39.0
+    uses: yedeya-labs/kanon/.github/workflows/release.yml@v0.40.0
+    secrets:
+      RELEASER_APP_ID: ${{ secrets.RELEASER_APP_ID }}
+      RELEASER_APP_PRIVATE_KEY: ${{ secrets.RELEASER_APP_PRIVATE_KEY }}
