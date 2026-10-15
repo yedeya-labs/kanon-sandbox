@@ -19,7 +19,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/art"
           echo "built at ${GITHUB_SHA} run ${GITHUB_RUN_ID}/${GITHUB_RUN_ATTEMPT}" > "$RUNNER_TEMP/art/build.txt"
           echo "digest=$(sha256sum "$RUNNER_TEMP/art/build.txt" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: d0-build-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/art/
