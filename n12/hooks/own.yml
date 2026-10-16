@@ -1,0 +1,32 @@
+# Plan 0011 N12 (kanon#1081): an adopter's own hook, fixture-shaped (the four inputs of plan 0011
+# §6.1, as tests/fixtures/notify-hook in Kanon declares them), that posts. It is §6.1's example:
+# the plain-text rendering as `{"text": …}`, which a Slack incoming webhook takes, so the same
+# KANON_CHAT_* secret works. The notify block counts it as `custom`.
+#
+# Not the live hook: for its check, copy it over .github/actions/notify/action.yml on a branch
+# and dispatch a digest on that branch.
+name: notify
+description: N12's own hook, posting the plain text to a system that takes {"text": ...}.
+
+inputs:
+  message-v1:
+    description: Path to the validated message, version 1, as JSON.
+    required: true
+  text:
+    description: Path to the message's plain-text rendering.
+    required: true
+  kind:
+    description: The message's kind.
+    required: true
+  secret:
+    description: This kind's webhook URL.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        URL: ${{ inputs.secret }}
+        TEXT_FILE: ${{ inputs.text }}
+      run: jq -n --rawfile t "$TEXT_FILE" '{text: $t}' | curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$URL"
