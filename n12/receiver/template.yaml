@@ -1,0 +1,111 @@
+# Plan 0011 N12 (kanon#1081): a throwaway JSON receiver for Kanon's generic webhook hook, in the
+# Owner's own AWS account, so no third-party service holds the payload. Not deployed by anything
+# here: the Owner deploys it, runs the check, and deletes the stack.
+#
+#   aws cloudformation deploy --stack-name kanon-n12-receiver \
+#     --template-file n12/receiver/template.yaml
+#   aws cloudformation describe-stacks --stack-name kanon-n12-receiver \
+#     --query "Stacks[0].Outputs[?OutputKey=='ReceiverUrl'].OutputValue" --output text
+#
+# Store that URL as the kind's secret (it is the credential: the hook signs nothing), dispatch the
+# digest on a branch whose hook is n12/hooks/webhook.yml, then read what arrived:
+#
+#   aws logs tail /aws/lambda/kanon-n12-receiver --since 1h
+#
+# Each request logs one line `kanon-n12 {...}`: the method, the Content-Type and User-Agent
+# headers, the names of every other header, the body's byte length and SHA-256, whether it parses
+# as JSON with schema_version 1, its kind, and the body itself. Its log group keeps a day. Delete
+# with `aws cloudformation delete-stack --stack-name kanon-n12-receiver`.
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Kanon plan 0011 N12, a throwaway receiver for the generic webhook hook.
+
+Resources:
+  Logs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/kanon-n12-receiver
+      RetentionInDays: 1
+
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: { Service: lambda.amazonaws.com }
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: logs
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: [logs:CreateLogStream, logs:PutLogEvents]
+                Resource: !GetAtt Logs.Arn
+
+  Receiver:
+    Type: AWS::Lambda::Function
+    DependsOn: Logs
+    Properties:
+      FunctionName: kanon-n12-receiver
+      Runtime: python3.13
+      Handler: index.handler
+      Timeout: 5
+      MemorySize: 128
+      ReservedConcurrentExecutions: 1
+      Role: !GetAtt Role.Arn
+      Code:
+        ZipFile: |
+          import base64, hashlib, json
+
+          def handler(event, context):
+              raw = event.get("body") or ""
+              body = base64.b64decode(raw) if event.get("isBase64Encoded") else raw.encode("utf-8")
+              headers = {k.lower(): v for k, v in (event.get("headers") or {}).items()}
+              try:
+                  msg = json.loads(body)
+                  parsed = isinstance(msg, dict)
+              except ValueError:
+                  msg, parsed = None, False
+              print("kanon-n12 " + json.dumps({
+                  "method": event.get("requestContext", {}).get("http", {}).get("method"),
+                  "content_type": headers.get("content-type"),
+                  "user_agent": headers.get("user-agent"),
+                  "other_headers": sorted(k for k in headers if k not in ("content-type", "user-agent")),
+                  "bytes": len(body),
+                  "sha256": hashlib.sha256(body).hexdigest(),
+                  "json": parsed,
+                  "schema_version": msg.get("schema_version") if parsed else None,
+                  "kind": msg.get("kind") if parsed else None,
+                  "body": body.decode("utf-8", "replace"),
+              }))
+              return {"statusCode": 204}
+
+  Url:
+    Type: AWS::Lambda::Url
+    Properties:
+      TargetFunctionArn: !Ref Receiver
+      AuthType: NONE
+
+  # A public function URL needs both permissions since AWS's change of October 2025; the second is
+  # limited to calls through the URL.
+  InvokeUrl:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref Receiver
+      Action: lambda:InvokeFunctionUrl
+      Principal: "*"
+      FunctionUrlAuthType: NONE
+
+  Invoke:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref Receiver
+      Action: lambda:InvokeFunction
+      Principal: "*"
+      InvokedViaFunctionUrl: true
+
+Outputs:
+  ReceiverUrl:
+    Value: !GetAtt Url.FunctionUrl
