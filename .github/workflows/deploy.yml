@@ -17,7 +17,7 @@ on:
 
 jobs:
   release:
-    uses: yedeya-labs/kanon/.github/workflows/deploy-release.yml@v0.40.0
+    uses: yedeya-labs/kanon/.github/workflows/deploy-release.yml@v0.40.1
     permissions:
       actions: read
       contents: read
@@ -29,7 +29,7 @@ jobs:
   deploy-1:
     name: probe-staging
     needs: release
-    uses: yedeya-labs/kanon/.github/workflows/deploy.yml@v0.40.0
+    uses: yedeya-labs/kanon/.github/workflows/deploy.yml@v0.40.1
     permissions:
       actions: read
       contents: read
@@ -40,10 +40,12 @@ jobs:
       environment: probe-staging
       position: 1
       build: ${{ needs.release.outputs.build }}
+    secrets:
+      KANON_DEPLOY_SECRET: ${{ secrets.KANON_DEPLOY_SECRET }}
   deploy-2:
     name: probe-production
     needs: [release, deploy-1]
-    uses: yedeya-labs/kanon/.github/workflows/deploy.yml@v0.40.0
+    uses: yedeya-labs/kanon/.github/workflows/deploy.yml@v0.40.1
     permissions:
       actions: read
       contents: read
@@ -54,3 +56,5 @@ jobs:
       environment: probe-production
       position: 2
       build: ${{ needs.release.outputs.build }}
+    secrets:
+      KANON_DEPLOY_SECRET: ${{ secrets.KANON_DEPLOY_SECRET }}

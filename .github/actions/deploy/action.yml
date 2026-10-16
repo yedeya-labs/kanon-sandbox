@@ -42,6 +42,15 @@ runs:
           require("fs").writeFileSync(process.env.RUNNER_TEMP + "/kanon-deploy-probe.json", JSON.stringify(answers));
           console.log("probe answers", JSON.stringify(answers));
         '
+    # kanon#1049: the lane hands this step KANON_DEPLOY_SECRET, the environment's own secret.
+    # The rehearsal's environments each hold a dummy value, so an empty one fails the deploy.
+    - name: Check the environment secret arrived
+      if: inputs.probe != 'true'
+      shell: bash
+      run: |
+        set -euo pipefail
+        [ -n "${KANON_DEPLOY_SECRET:-}" ] || { echo "::error::KANON_DEPLOY_SECRET is empty"; exit 1; }
+        echo "KANON_DEPLOY_SECRET arrived, ${#KANON_DEPLOY_SECRET} characters"
     - name: Check the artifact holds dist/hello.txt with the release tag
       if: inputs.probe != 'true'
       shell: bash
