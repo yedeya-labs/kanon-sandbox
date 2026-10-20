@@ -1,9 +1,14 @@
 # plan 0013 S0 item 1 (kanon#1166): a passing deploy step and a failing smoke step under continue-on-error.
 name: probe-0013-1
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  # push only registers the workflow so it can be dispatched from this branch; every job skips on push.
+  push:
+    branches: [probe/plan-0013-s0]
 permissions: {}
 jobs:
   deploy:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     environment: probe-0013-1
     steps:

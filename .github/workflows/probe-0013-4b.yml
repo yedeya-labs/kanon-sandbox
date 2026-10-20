@@ -1,9 +1,14 @@
 # plan 0013 S0 item 4 (kanon#1166): a job pending behind the waiting one; does it survive six hours?
 name: probe-0013-4b
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  # push only registers the workflow so it can be dispatched from this branch; every job skips on push.
+  push:
+    branches: [probe/plan-0013-s0]
 permissions: {}
 jobs:
   slot:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     concurrency:
       group: probe-0013-g4

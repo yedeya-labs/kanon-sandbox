@@ -1,12 +1,16 @@
 # plan 0013 S0 item 5 (kanon#1166): the workflow token dispatches a workflow at a tag ref.
 name: probe-0013-5
 on:
+  # push only registers the workflow so it can be dispatched from this branch; every job skips on push.
+  push:
+    branches: [probe/plan-0013-s0]
   workflow_dispatch:
     inputs:
       tag: { type: string, required: true }
 permissions: {}
 jobs:
   dispatch:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       actions: write

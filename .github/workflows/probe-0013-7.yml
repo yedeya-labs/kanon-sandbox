@@ -1,9 +1,14 @@
 # plan 0013 S0 item 7 (kanon#1166): a job cancelled during a continue-on-error step.
 name: probe-0013-7
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  # push only registers the workflow so it can be dispatched from this branch; every job skips on push.
+  push:
+    branches: [probe/plan-0013-s0]
 permissions: {}
 jobs:
   deploy:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     environment: probe-0013-7
     steps:

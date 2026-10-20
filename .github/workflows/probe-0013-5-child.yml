@@ -1,12 +1,16 @@
 # plan 0013 S0 item 5 (kanon#1166): the run the workflow token dispatched; prints who and where.
 name: probe-0013-5-child
 on:
+  # push only registers the workflow so it can be dispatched from this branch; every job skips on push.
+  push:
+    branches: [probe/plan-0013-s0]
   workflow_dispatch:
     inputs:
       via: { type: string, required: false }
 permissions: {}
 jobs:
   show:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - run: |

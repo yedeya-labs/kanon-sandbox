@@ -1,12 +1,16 @@
 # plan 0013 S0 item 2 (kanon#1166): workflow b of two whose jobs share one queue: max group.
 name: probe-0013-2b
 on:
+  # push only registers the workflow so it can be dispatched from this branch; every job skips on push.
+  push:
+    branches: [probe/plan-0013-s0]
   workflow_dispatch:
     inputs:
       hold: { type: string, required: false, default: '20' }
 permissions: {}
 jobs:
   slot:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     concurrency:
       group: probe-0013-g2
