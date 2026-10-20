@@ -1,0 +1,17 @@
+# plan 0013 S0 item 6 (kanon#1166): deployment: false on an environment with a required reviewer.
+name: probe-0013-6r
+on:
+  # push only registers the workflow so it can be dispatched from this branch; every job skips on push.
+  push:
+    branches: [probe/plan-0013-s0]
+  workflow_dispatch:
+permissions: {}
+jobs:
+  smoke:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment:
+      name: probe-0013-3
+      deployment: false
+    steps:
+      - run: echo "approved"
