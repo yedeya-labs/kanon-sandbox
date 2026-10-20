@@ -1,0 +1,13 @@
+# plan 0013 S0 item 3 (kanon#1166): another workflow's job in the same group, no environment.
+name: probe-0013-3b
+on: workflow_dispatch
+permissions: {}
+jobs:
+  slot:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: probe-0013-g3
+      cancel-in-progress: false
+      queue: max
+    steps:
+      - run: echo "workflow b got the slot"

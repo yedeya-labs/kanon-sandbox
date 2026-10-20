@@ -1,0 +1,19 @@
+# plan 0013 S0 item 1 (kanon#1166): a passing deploy step and a failing smoke step under continue-on-error.
+name: probe-0013-1
+on: workflow_dispatch
+permissions: {}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: probe-0013-1
+    steps:
+      - name: deploy
+        run: echo "deploy hook passed"
+      - name: smoke
+        id: smoke
+        continue-on-error: true
+        run: |
+          echo "smoke hook fails"
+          exit 1
+      - name: outcome
+        run: echo "smoke outcome=${{ steps.smoke.outcome }} conclusion=${{ steps.smoke.conclusion }}"

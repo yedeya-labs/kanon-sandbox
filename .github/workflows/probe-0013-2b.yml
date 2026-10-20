@@ -1,0 +1,18 @@
+# plan 0013 S0 item 2 (kanon#1166): workflow b of two whose jobs share one queue: max group.
+name: probe-0013-2b
+on:
+  workflow_dispatch:
+    inputs:
+      hold: { type: string, required: false, default: '20' }
+permissions: {}
+jobs:
+  slot:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: probe-0013-g2
+      cancel-in-progress: false
+      queue: max
+    steps:
+      - run: |
+          echo "workflow b run ${{ github.run_id }} holds the slot for ${{ inputs.hold }}s"
+          sleep ${{ inputs.hold }}

@@ -1,0 +1,14 @@
+# plan 0013 S0 item 5 (kanon#1166): the run the workflow token dispatched; prints who and where.
+name: probe-0013-5-child
+on:
+  workflow_dispatch:
+    inputs:
+      via: { type: string, required: false }
+permissions: {}
+jobs:
+  show:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "event=${{ github.event_name }} ref=${{ github.ref }} ref_type=${{ github.ref_type }}"
+          echo "actor=${{ github.actor }} triggering_actor=${{ github.triggering_actor }} via=${{ inputs.via }}"

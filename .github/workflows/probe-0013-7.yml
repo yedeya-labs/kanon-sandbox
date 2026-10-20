@@ -1,0 +1,16 @@
+# plan 0013 S0 item 7 (kanon#1166): a job cancelled during a continue-on-error step.
+name: probe-0013-7
+on: workflow_dispatch
+permissions: {}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: probe-0013-7
+    steps:
+      - name: deploy
+        run: echo "deploy hook passed"
+      - name: smoke
+        continue-on-error: true
+        run: |
+          echo "smoke hook runs long; cancel the run now"
+          sleep 600

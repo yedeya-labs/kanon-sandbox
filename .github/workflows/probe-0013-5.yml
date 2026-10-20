@@ -1,0 +1,17 @@
+# plan 0013 S0 item 5 (kanon#1166): the workflow token dispatches a workflow at a tag ref.
+name: probe-0013-5
+on:
+  workflow_dispatch:
+    inputs:
+      tag: { type: string, required: true }
+permissions: {}
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: gh workflow run probe-0013-5-child.yml -R "$GITHUB_REPOSITORY" --ref "$TAG" -f via="$GITHUB_RUN_ID"

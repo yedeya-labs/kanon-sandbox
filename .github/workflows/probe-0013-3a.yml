@@ -1,0 +1,14 @@
+# plan 0013 S0 item 3 (kanon#1166): a job waiting for a reviewer holds the group's slot.
+name: probe-0013-3a
+on: workflow_dispatch
+permissions: {}
+jobs:
+  slot:
+    runs-on: ubuntu-latest
+    environment: probe-0013-3
+    concurrency:
+      group: probe-0013-g3
+      cancel-in-progress: false
+      queue: max
+    steps:
+      - run: echo "approved; never expected to run in the probe"
