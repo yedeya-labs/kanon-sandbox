@@ -17,7 +17,7 @@ on:
 
 jobs:
   release:
-    uses: yedeya-labs/kanon/.github/workflows/deploy-release.yml@candidate-v0.41.0
+    uses: yedeya-labs/kanon/.github/workflows/deploy-release.yml@candidate-v0.42.0
     permissions:
       actions: read
       contents: read
@@ -29,7 +29,7 @@ jobs:
   deploy-1:
     name: probe-staging
     needs: release
-    uses: yedeya-labs/kanon/.github/workflows/deploy.yml@candidate-v0.41.0
+    uses: yedeya-labs/kanon/.github/workflows/deploy.yml@candidate-v0.42.0
     permissions:
       actions: read
       contents: read
@@ -46,7 +46,7 @@ jobs:
   deploy-2:
     name: probe-production
     needs: [release, deploy-1]
-    uses: yedeya-labs/kanon/.github/workflows/deploy.yml@candidate-v0.41.0
+    uses: yedeya-labs/kanon/.github/workflows/deploy.yml@candidate-v0.42.0
     permissions:
       actions: read
       contents: read

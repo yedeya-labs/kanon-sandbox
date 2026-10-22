@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   digest:
-    uses: yedeya-labs/kanon/.github/workflows/agent-weekly-digest.yml@candidate-v0.41.0
+    uses: yedeya-labs/kanon/.github/workflows/agent-weekly-digest.yml@candidate-v0.42.0
     with:
       week_end: ${{ inputs.week_end }}
       dry_run: ${{ inputs.dry_run }}
