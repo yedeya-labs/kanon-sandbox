@@ -22,6 +22,13 @@
 
 `in bootstrap since 2026-10-15`
 
+## Choices
+
+- **Feature:** `full`
+- **Review trigger:** `labelled`
+- **Overseer:** `installed`
+- **Chat channel:** Slack, through Kanon's Slack hook (one secret per kind)
+
 ## Data
 
 Whether this repository holds private or sensitive material, which nobody declared at install. The lanes read the files and diffs their work needs either way.
