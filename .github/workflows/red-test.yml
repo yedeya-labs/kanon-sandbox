@@ -1,0 +1,15 @@
+# The caller of Kanon's red-test check (docs/lanes.md, "The red-test check"): on a pull request
+# labelled agent:implement or agent:triage, fails when the changed tests still pass with the
+# change's non-test part reverted. A person's pull request concludes skipped.
+name: Red-test
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+jobs:
+  red-test:
+    uses: yedeya-labs/kanon/.github/workflows/red-test.yml@candidate-v0.42.0
