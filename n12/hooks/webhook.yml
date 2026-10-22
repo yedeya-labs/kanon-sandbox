@@ -1,5 +1,5 @@
 # Plan 0011 N12 (kanon#1081): Kanon's generic webhook hook, as `kanon init --chat webhook` writes it
-# at candidate-v0.41.0. Not the live hook: for its check, copy it over
+# at candidate-v0.42.0. Not the live hook: for its check, copy it over
 # .github/actions/notify/action.yml on a branch and dispatch a digest on that branch, with the
 # kind's secret set to the receiver's URL (n12/receiver/template.yaml).
 #
@@ -35,7 +35,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: yedeya-labs/kanon/actions/notify/webhook@candidate-v0.41.0 # x-release-please-version
+    - uses: yedeya-labs/kanon/actions/notify/webhook@candidate-v0.42.0 # x-release-please-version
       with:
         message-v1: ${{ inputs.message-v1 }}
         text: ${{ inputs.text }}
