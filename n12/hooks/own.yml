@@ -6,7 +6,7 @@
 # Not the live hook: for its check, copy it over .github/actions/notify/action.yml on a branch
 # and dispatch a digest on that branch.
 name: notify
-description: N12's own hook, posting the plain text to a system that takes {"text": ...}.
+description: 'N12''s own hook, posting the plain text to a system that takes {"text": ...}.'
 
 inputs:
   message-v1:
@@ -29,4 +29,5 @@ runs:
       env:
         URL: ${{ inputs.secret }}
         TEXT_FILE: ${{ inputs.text }}
-      run: jq -n --rawfile t "$TEXT_FILE" '{text: $t}' | curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$URL"
+      run: |
+        jq -n --rawfile t "$TEXT_FILE" '{text: $t}' | curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$URL"
