@@ -7,4 +7,7 @@ jobs:
   hello:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "reusable (1.1.0) at ${{ github.workflow_ref }}"
+      # The ref reaches the script through env, never inline: a branch name may hold `$(...)`.
+      - env:
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+        run: echo "reusable (1.1.0) at $WORKFLOW_REF"
