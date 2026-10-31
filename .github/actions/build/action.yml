@@ -22,7 +22,8 @@ runs:
         OUTPUT: ${{ inputs.output }}
       run: |
         set -euo pipefail
-        test -n "$RELEASE" && test -n "$OUTPUT"
+        [ -n "$RELEASE" ] || { echo "::error::the release input is empty"; exit 1; }
+        [ -n "$OUTPUT" ] || { echo "::error::the output input is empty"; exit 1; }
         mkdir -p "$OUTPUT/dist"
         printf '%s\n' "$RELEASE" > "$OUTPUT/dist/hello.txt"
         echo "Built $OUTPUT/dist/hello.txt for $RELEASE"
